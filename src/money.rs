@@ -21,7 +21,7 @@ mod test {
         let five = Dollar::new(5);
         let mut product = five.times(2);
         assert_eq!(10, product.amount);
-        product.times(3);
+        product = five.times(3);
         assert_eq!(15, product.amount);
     }
 }
