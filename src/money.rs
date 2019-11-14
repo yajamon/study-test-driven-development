@@ -6,8 +6,9 @@ impl Dollar {
     fn new(amount: i64) -> Dollar {
         Dollar { amount }
     }
-    fn times(&mut self, multiplier: i64) {
-        self.amount *= multiplier;
+    fn times(self, multiplier: i64) -> Dollar {
+        self.amount * multiplier;
+        Dollar::new(0)
     }
 }
 
