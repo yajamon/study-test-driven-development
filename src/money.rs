@@ -4,6 +4,7 @@ impl Dollar {
     fn new(amount: i64) -> Dollar {
         Dollar {}
     }
+    fn times(&mut self, multiplier: i64) {}
 }
 
 #[cfg(test)]
