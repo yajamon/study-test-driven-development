@@ -1,8 +1,10 @@
-pub struct Dollar {}
+pub struct Dollar {
+    amount: i64,
+}
 
 impl Dollar {
     fn new(amount: i64) -> Dollar {
-        Dollar {}
+        Dollar { amount: 0 }
     }
     fn times(&mut self, multiplier: i64) {}
 }
