@@ -1,5 +1,9 @@
+pub struct Dollar {}
+
 #[cfg(test)]
 mod test {
+    use super::*;
+
     #[test]
     fn test_multiplication() {
         let mut five = Dollar::new(5);
