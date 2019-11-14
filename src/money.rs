@@ -1,5 +1,11 @@
 pub struct Dollar {}
 
+impl Dollar {
+    fn new(amount: i64) -> Dollar {
+        Dollar {}
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
