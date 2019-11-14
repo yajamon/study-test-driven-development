@@ -30,5 +30,6 @@ mod test {
     #[test]
     fn test_equality() {
         assert_eq!(Dollar::new(5).equals(Dollar::new(5)), true);
+        assert_eq!(Dollar::new(5).equals(Dollar::new(6)), false);
     }
 }
