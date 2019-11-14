@@ -23,4 +23,9 @@ mod test {
         product = five.times(3);
         assert_eq!(15, product.amount);
     }
+
+    #[test]
+    fn test_equality() {
+        assert_eq!(Dollar::new(5).equals(Dollar::new(5)), true);
+    }
 }
