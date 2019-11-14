@@ -9,8 +9,8 @@ impl Dollar {
     fn times(&self, multiplier: i64) -> Dollar {
         Dollar::new(self.amount * multiplier)
     }
-    fn equals(&self, other: Dollar) -> bool {
-        true
+    fn equals(&self, other: &Dollar) -> bool {
+        self.amount == other.amount
     }
 }
 
