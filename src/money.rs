@@ -1,3 +1,4 @@
+#[derive(PartialEq)]
 pub struct Dollar {
     amount: i64,
 }
@@ -8,9 +9,6 @@ impl Dollar {
     }
     fn times(&self, multiplier: i64) -> Dollar {
         Dollar::new(self.amount * multiplier)
-    }
-    fn equals(&self, other: &Dollar) -> bool {
-        self.amount == other.amount
     }
 }
 
