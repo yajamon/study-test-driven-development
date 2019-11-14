@@ -6,8 +6,8 @@ impl Dollar {
     fn new(amount: i64) -> Dollar {
         Dollar { amount }
     }
-    fn times(&mut self, multiplier: i64) {
-        self.amount *= multiplier;
+    fn times(&self, multiplier: i64) -> Dollar {
+        Dollar::new(self.amount * multiplier)
     }
 }
 
@@ -17,8 +17,10 @@ mod test {
 
     #[test]
     fn test_multiplication() {
-        let mut five = Dollar::new(5);
-        five.times(2);
-        assert_eq!(10, five.amount)
+        let five = Dollar::new(5);
+        let mut product = five.times(2);
+        assert_eq!(10, product.amount);
+        product = five.times(3);
+        assert_eq!(15, product.amount);
     }
 }
