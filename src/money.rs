@@ -4,10 +4,10 @@ pub struct Dollar {
 
 impl Dollar {
     fn new(amount: i64) -> Dollar {
-        Dollar { amount: 0 }
+        Dollar { amount }
     }
     fn times(&mut self, multiplier: i64) {
-        self.amount = 5 * 2;
+        self.amount = self.amount * 2;
     }
 }
 
