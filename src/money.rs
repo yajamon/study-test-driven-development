@@ -22,7 +22,7 @@ mod test {
         let mut product = five.times(2);
         assert_eq!(Dollar::new(10), product);
         product = five.times(3);
-        assert_eq!(15, product.amount);
+        assert_eq!(Dollar::new(15), product);
     }
 
     #[test]
