@@ -12,6 +12,20 @@ impl Dollar {
     }
 }
 
+#[derive(Debug, PartialEq)]
+pub struct Franc {
+    amount: i64,
+}
+
+impl Franc {
+    fn new(amount: i64) -> Franc {
+        Franc { amount }
+    }
+    fn times(&self, multiplier: i64) -> Franc {
+        Franc::new(self.amount * multiplier)
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
