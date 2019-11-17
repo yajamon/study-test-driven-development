@@ -2,6 +2,14 @@ pub enum Money {
     Dollar(Dollar),
 }
 
+impl PartialEq for Money {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Money::Dollar(left), Money::Dollar(right)) => left == right,
+        }
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub struct Dollar {
     amount: i64,
