@@ -24,10 +24,10 @@ pub struct Dollar {
 }
 
 impl Dollar {
-    fn new(amount: i64) -> Dollar {
-        Dollar { amount }
+    fn new(amount: i64) -> Money {
+        Money::Dollar(Dollar { amount })
     }
-    fn times(&self, multiplier: i64) -> Dollar {
+    fn times(&self, multiplier: i64) -> Money {
         Dollar::new(self.amount * multiplier)
     }
 }
