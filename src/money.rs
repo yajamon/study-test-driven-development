@@ -1,7 +1,15 @@
+#[derive(Debug)]
 pub enum Money {
     Dollar(Dollar),
 }
 
+impl Money {
+    fn times(&self, multiplier: i64) -> Self {
+        match self {
+            Money::Dollar(dollar) => dollar.times(multiplier),
+        }
+    }
+}
 impl PartialEq for Money {
     fn eq(&self, other: &Self) -> bool {
         match (self, other) {
