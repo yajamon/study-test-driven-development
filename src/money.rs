@@ -1,12 +1,14 @@
 #[derive(Debug)]
 pub enum Money {
     Dollar(Dollar),
+    Franc(Franc),
 }
 
 impl Money {
     fn times(&self, multiplier: i64) -> Self {
         match self {
             Money::Dollar(dollar) => dollar.times(multiplier),
+            Money::Franc(franc) => franc.times(multiplier),
         }
     }
 }
@@ -14,6 +16,8 @@ impl PartialEq for Money {
     fn eq(&self, other: &Self) -> bool {
         match (self, other) {
             (Money::Dollar(left), Money::Dollar(right)) => left == right,
+            (Money::Franc(left), Money::Franc(right)) => left == right,
+            _ => true,
         }
     }
 }
@@ -38,10 +42,10 @@ pub struct Franc {
 }
 
 impl Franc {
-    fn new(amount: i64) -> Franc {
-        Franc { amount }
+    fn new(amount: i64) -> Money {
+        Money::Franc(Franc { amount })
     }
-    fn times(&self, multiplier: i64) -> Franc {
+    fn times(&self, multiplier: i64) -> Money {
         Franc::new(self.amount * multiplier)
     }
 }
