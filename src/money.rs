@@ -67,8 +67,7 @@ mod test {
         assert_eq!(Dollar::new(5) == Dollar::new(6), false);
         assert_eq!(Franc::new(5) == Franc::new(5), true);
         assert_eq!(Franc::new(5) == Franc::new(6), false);
-        // mismatched types!!
-        // assert_eq!(Dollar::new(5) == Franc::new(5), true);
+        assert_eq!(Dollar::new(5) == Franc::new(5), false);
     }
 
     #[test]
