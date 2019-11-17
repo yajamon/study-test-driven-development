@@ -1,4 +1,4 @@
-pub trait Money: PartialEq {}
+pub enum Money {}
 
 #[derive(Debug, PartialEq)]
 pub struct Dollar {
@@ -14,8 +14,6 @@ impl Dollar {
     }
 }
 
-impl Money for Dollar {}
-
 #[derive(Debug, PartialEq)]
 pub struct Franc {
     amount: i64,
@@ -29,8 +27,6 @@ impl Franc {
         Franc::new(self.amount * multiplier)
     }
 }
-
-impl Money for Franc {}
 
 #[cfg(test)]
 mod test {
