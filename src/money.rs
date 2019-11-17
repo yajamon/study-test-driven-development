@@ -17,7 +17,7 @@ impl PartialEq for Money {
         match (self, other) {
             (Money::Dollar(left), Money::Dollar(right)) => left == right,
             (Money::Franc(left), Money::Franc(right)) => left == right,
-            _ => true,
+            _ => false,
         }
     }
 }
