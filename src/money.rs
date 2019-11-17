@@ -30,6 +30,8 @@ impl Franc {
     }
 }
 
+impl Money for Franc {}
+
 #[cfg(test)]
 mod test {
     use super::*;
