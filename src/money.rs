@@ -1,3 +1,5 @@
+pub trait Money: PartialEq {}
+
 #[derive(Debug, PartialEq)]
 pub struct Dollar {
     amount: i64,
@@ -11,6 +13,8 @@ impl Dollar {
         Dollar::new(self.amount * multiplier)
     }
 }
+
+impl Money for Dollar {}
 
 #[derive(Debug, PartialEq)]
 pub struct Franc {
