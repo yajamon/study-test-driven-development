@@ -1,4 +1,6 @@
-pub enum Money {}
+pub enum Money {
+    Dollar(Dollar),
+}
 
 #[derive(Debug, PartialEq)]
 pub struct Dollar {
