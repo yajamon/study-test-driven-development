@@ -1,4 +1,26 @@
-pub trait Money: PartialEq {}
+#[derive(Debug)]
+pub enum Money {
+    Dollar(Dollar),
+    Franc(Franc),
+}
+
+impl Money {
+    fn times(&self, multiplier: i64) -> Self {
+        match self {
+            Money::Dollar(dollar) => dollar.times(multiplier),
+            Money::Franc(franc) => franc.times(multiplier),
+        }
+    }
+}
+impl PartialEq for Money {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Money::Dollar(left), Money::Dollar(right)) => left == right,
+            (Money::Franc(left), Money::Franc(right)) => left == right,
+            _ => false,
+        }
+    }
+}
 
 #[derive(Debug, PartialEq)]
 pub struct Dollar {
@@ -6,15 +28,13 @@ pub struct Dollar {
 }
 
 impl Dollar {
-    fn new(amount: i64) -> Dollar {
-        Dollar { amount }
+    fn new(amount: i64) -> Money {
+        Money::Dollar(Dollar { amount })
     }
-    fn times(&self, multiplier: i64) -> Dollar {
+    fn times(&self, multiplier: i64) -> Money {
         Dollar::new(self.amount * multiplier)
     }
 }
-
-impl Money for Dollar {}
 
 #[derive(Debug, PartialEq)]
 pub struct Franc {
@@ -22,15 +42,13 @@ pub struct Franc {
 }
 
 impl Franc {
-    fn new(amount: i64) -> Franc {
-        Franc { amount }
+    fn new(amount: i64) -> Money {
+        Money::Franc(Franc { amount })
     }
-    fn times(&self, multiplier: i64) -> Franc {
+    fn times(&self, multiplier: i64) -> Money {
         Franc::new(self.amount * multiplier)
     }
 }
-
-impl Money for Franc {}
 
 #[cfg(test)]
 mod test {
@@ -49,8 +67,7 @@ mod test {
         assert_eq!(Dollar::new(5) == Dollar::new(6), false);
         assert_eq!(Franc::new(5) == Franc::new(5), true);
         assert_eq!(Franc::new(5) == Franc::new(6), false);
-        // mismatched types!!
-        // assert_eq!(Dollar::new(5) == Franc::new(5), true);
+        assert_eq!(Dollar::new(5) == Franc::new(5), false);
     }
 
     #[test]
