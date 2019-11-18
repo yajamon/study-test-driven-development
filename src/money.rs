@@ -5,6 +5,9 @@ pub enum Money {
 }
 
 impl Money {
+    fn dollar(amount: i64) -> Money {
+        Dollar::new(amount)
+    }
     fn times(&self, multiplier: i64) -> Self {
         match self {
             Money::Dollar(dollar) => dollar.times(multiplier),
