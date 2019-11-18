@@ -60,17 +60,17 @@ mod test {
     #[test]
     fn test_multiplication() {
         let five = Money::dollar(5);
-        assert_eq!(Dollar::new(10), five.times(2));
-        assert_eq!(Dollar::new(15), five.times(3));
+        assert_eq!(Money::dollar(10), five.times(2));
+        assert_eq!(Money::dollar(15), five.times(3));
     }
 
     #[test]
     fn test_equality() {
-        assert_eq!(Dollar::new(5) == Dollar::new(5), true);
-        assert_eq!(Dollar::new(5) == Dollar::new(6), false);
+        assert_eq!(Money::dollar(5) == Money::dollar(5), true);
+        assert_eq!(Money::dollar(5) == Money::dollar(6), false);
         assert_eq!(Franc::new(5) == Franc::new(5), true);
         assert_eq!(Franc::new(5) == Franc::new(6), false);
-        assert_eq!(Dollar::new(5) == Franc::new(5), false);
+        assert_eq!(Money::dollar(5) == Franc::new(5), false);
     }
 
     #[test]
