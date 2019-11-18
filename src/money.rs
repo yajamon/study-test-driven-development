@@ -71,15 +71,15 @@ mod test {
     fn test_equality() {
         assert_eq!(Money::dollar(5) == Money::dollar(5), true);
         assert_eq!(Money::dollar(5) == Money::dollar(6), false);
-        assert_eq!(Money::franc(5) == Franc::new(5), true);
-        assert_eq!(Franc::new(5) == Franc::new(6), false);
-        assert_eq!(Money::dollar(5) == Franc::new(5), false);
+        assert_eq!(Money::franc(5) == Money::franc(5), true);
+        assert_eq!(Money::franc(5) == Money::franc(6), false);
+        assert_eq!(Money::dollar(5) == Money::franc(5), false);
     }
 
     #[test]
     fn test_franc_multiplication() {
-        let five = Franc::new(5);
-        assert_eq!(Franc::new(10), five.times(2));
-        assert_eq!(Franc::new(15), five.times(3));
+        let five = Money::franc(5);
+        assert_eq!(Money::franc(10), five.times(2));
+        assert_eq!(Money::franc(15), five.times(3));
     }
 }
