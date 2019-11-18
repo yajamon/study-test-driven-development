@@ -56,7 +56,7 @@ mod test {
 
     #[test]
     fn test_multiplication() {
-        let five = Dollar::new(5);
+        let five = Money::dollar(5);
         assert_eq!(Dollar::new(10), five.times(2));
         assert_eq!(Dollar::new(15), five.times(3));
     }
