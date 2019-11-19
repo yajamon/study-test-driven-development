@@ -1,62 +1,26 @@
-#[derive(Debug)]
-pub enum Money {
-    // amount, currency
-    Money(i64, String),
-    Dollar(i64, String),
-    Franc(i64, String),
+#[derive(Debug, PartialEq)]
+pub struct Money {
+    amount: i64,
+    currency: String,
 }
 
 impl Money {
-    fn dollar(amount: i64) -> Money {
-        Money::Dollar(amount, "USD".to_string())
+    fn new(amount: i64, currency: String) -> Money {
+        Money { amount, currency }
     }
-    fn franc(amount: i64) -> Money {
-        Money::Franc(amount, "CHF".to_string())
+    pub fn dollar(amount: i64) -> Money {
+        Money::new(amount, "USD".to_string())
     }
-    fn times(&self, multiplier: i64) -> Self {
-        match self {
-            Money::Money(_, _) => Money::Money(0, String::new()),
-            Money::Dollar(amount, currency) => {
-                Money::Money(amount * multiplier, currency.to_string())
-            }
-            Money::Franc(amount, currency) => {
-                Money::Money(amount * multiplier, currency.to_string())
-            }
-        }
+    pub fn franc(amount: i64) -> Money {
+        Money::new(amount, "CHF".to_string())
     }
-    fn currency(&self) -> &str {
-        match self {
-            Money::Money(_, _) => "",
-            Money::Dollar(_, currency) => currency,
-            Money::Franc(_, currency) => currency,
-        }
+    pub fn times(&self, multiplier: i64) -> Self {
+        Money::new(self.amount * multiplier, self.currency.to_string())
+    }
+    pub fn currency(&self) -> &str {
+        &self.currency
     }
 }
-impl PartialEq for Money {
-    fn eq(&self, other: &Self) -> bool {
-        let left = match self {
-            Money::Dollar(amount, currency) => (amount, currency),
-            Money::Franc(amount, currency) => (amount, currency),
-            Money::Money(amount, currency) => (amount, currency),
-        };
-        let right = match other {
-            Money::Dollar(amount, currency) => (amount, currency),
-            Money::Franc(amount, currency) => (amount, currency),
-            Money::Money(amount, currency) => (amount, currency),
-        };
-        left == right
-    }
-}
-
-#[derive(Debug, PartialEq)]
-pub struct Dollar {}
-
-impl Dollar {}
-
-#[derive(Debug, PartialEq)]
-pub struct Franc {}
-
-impl Franc {}
 
 #[cfg(test)]
 mod test {
@@ -73,23 +37,7 @@ mod test {
     fn test_equality() {
         assert_eq!(Money::dollar(5) == Money::dollar(5), true);
         assert_eq!(Money::dollar(5) == Money::dollar(6), false);
-        assert_eq!(Money::franc(5) == Money::franc(5), true);
-        assert_eq!(Money::franc(5) == Money::franc(6), false);
         assert_eq!(Money::dollar(5) == Money::franc(5), false);
-    }
-    #[test]
-    fn test_different_type_equality() {
-        assert_eq!(
-            Money::Money(10, "CHF".to_string()) == Money::Franc(10, "CHF".to_string()),
-            true
-        );
-    }
-
-    #[test]
-    fn test_franc_multiplication() {
-        let five = Money::franc(5);
-        assert_eq!(Money::franc(10), five.times(2));
-        assert_eq!(Money::franc(15), five.times(3));
     }
 
     #[test]
