@@ -59,7 +59,7 @@ impl Franc {
         Money::Franc("CHF".to_string(), Franc { amount })
     }
     fn times(&self, multiplier: i64) -> Money {
-        Franc::new(self.amount * multiplier, String::new())
+        Money::franc(self.amount * multiplier)
     }
 }
 
