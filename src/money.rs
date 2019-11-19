@@ -2,7 +2,6 @@
 pub enum Money {
     // amount, currency
     Money(i64, String),
-    Dollar(i64, String),
     Franc(i64, String),
 }
 
@@ -18,9 +17,6 @@ impl Money {
             Money::Money(amount, currency) => {
                 Money::Money(amount * multiplier, currency.to_string())
             }
-            Money::Dollar(amount, currency) => {
-                Money::Money(amount * multiplier, currency.to_string())
-            }
             Money::Franc(amount, currency) => {
                 Money::Money(amount * multiplier, currency.to_string())
             }
@@ -29,7 +25,6 @@ impl Money {
     fn currency(&self) -> &str {
         match self {
             Money::Money(_, currency) => currency,
-            Money::Dollar(_, currency) => currency,
             Money::Franc(_, currency) => currency,
         }
     }
@@ -37,12 +32,10 @@ impl Money {
 impl PartialEq for Money {
     fn eq(&self, other: &Self) -> bool {
         let left = match self {
-            Money::Dollar(amount, currency) => (amount, currency),
             Money::Franc(amount, currency) => (amount, currency),
             Money::Money(amount, currency) => (amount, currency),
         };
         let right = match other {
-            Money::Dollar(amount, currency) => (amount, currency),
             Money::Franc(amount, currency) => (amount, currency),
             Money::Money(amount, currency) => (amount, currency),
         };
