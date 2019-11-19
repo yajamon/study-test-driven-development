@@ -68,8 +68,6 @@ mod test {
     fn test_equality() {
         assert_eq!(Money::dollar(5) == Money::dollar(5), true);
         assert_eq!(Money::dollar(5) == Money::dollar(6), false);
-        assert_eq!(Money::franc(5) == Money::franc(5), true);
-        assert_eq!(Money::franc(5) == Money::franc(6), false);
         assert_eq!(Money::dollar(5) == Money::franc(5), false);
     }
     #[test]
