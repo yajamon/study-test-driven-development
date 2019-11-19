@@ -11,11 +11,13 @@ impl Money {
         Money::Dollar(amount, "USD".to_string())
     }
     fn franc(amount: i64) -> Money {
-        Money::Franc(amount, "CHF".to_string())
+        Money::Money(amount, "CHF".to_string())
     }
     fn times(&self, multiplier: i64) -> Self {
         match self {
-            Money::Money(_, _) => Money::Money(0, String::new()),
+            Money::Money(amount, currency) => {
+                Money::Money(amount * multiplier, currency.to_string())
+            }
             Money::Dollar(amount, currency) => {
                 Money::Money(amount * multiplier, currency.to_string())
             }
@@ -26,7 +28,7 @@ impl Money {
     }
     fn currency(&self) -> &str {
         match self {
-            Money::Money(_, _) => "",
+            Money::Money(_, currency) => currency,
             Money::Dollar(_, currency) => currency,
             Money::Franc(_, currency) => currency,
         }
