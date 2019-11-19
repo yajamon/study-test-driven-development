@@ -17,6 +17,12 @@ impl Money {
             Money::Franc(franc) => franc.times(multiplier),
         }
     }
+    fn currency(&self) -> &str {
+        match self {
+            Money::Dollar(dollar) => dollar.currency(),
+            Money::Franc(franc) => franc.currency(),
+        }
+    }
 }
 impl PartialEq for Money {
     fn eq(&self, other: &Self) -> bool {
@@ -40,6 +46,9 @@ impl Dollar {
     fn times(&self, multiplier: i64) -> Money {
         Dollar::new(self.amount * multiplier)
     }
+    fn currency(&self) -> &str {
+        "USD"
+    }
 }
 
 #[derive(Debug, PartialEq)]
@@ -53,6 +62,9 @@ impl Franc {
     }
     fn times(&self, multiplier: i64) -> Money {
         Franc::new(self.amount * multiplier)
+    }
+    fn currency(&self) -> &str {
+        "CHF"
     }
 }
 
