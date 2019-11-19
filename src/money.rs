@@ -17,6 +17,9 @@ impl Money {
     pub fn times(&self, multiplier: i64) -> Self {
         Money::new(self.amount * multiplier, self.currency.to_string())
     }
+    pub fn plus(&self, addend: &Money) -> Self {
+        Money::new(self.amount + addend.amount, self.currency.to_string())
+    }
     pub fn currency(&self) -> &str {
         &self.currency
     }
