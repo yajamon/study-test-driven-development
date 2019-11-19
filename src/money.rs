@@ -7,7 +7,7 @@ pub enum Money {
 
 impl Money {
     fn dollar(amount: i64) -> Money {
-        Dollar::new(amount)
+        Dollar::new(amount, "USD".to_string())
     }
     fn franc(amount: i64) -> Money {
         Franc::new(amount, "CHF".to_string())
@@ -41,11 +41,11 @@ pub struct Dollar {
 }
 
 impl Dollar {
-    fn new(amount: i64) -> Money {
-        Money::Dollar("USD".to_string(), Dollar { amount })
+    fn new(amount: i64, currency: String) -> Money {
+        Money::Dollar(currency, Dollar { amount })
     }
     fn times(&self, multiplier: i64) -> Money {
-        Dollar::new(self.amount * multiplier)
+        Money::dollar(self.amount * multiplier)
     }
 }
 
