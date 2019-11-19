@@ -1,6 +1,7 @@
 #[derive(Debug)]
 pub enum Money {
     // amount, currency
+    Money(i64, String),
     Dollar(i64, String),
     Franc(i64, String),
 }
@@ -14,12 +15,14 @@ impl Money {
     }
     fn times(&self, multiplier: i64) -> Self {
         match self {
+            Money::Money(_, _) => Money::Money(0, String::new()),
             Money::Dollar(amount, _) => Dollar::times(amount, multiplier),
             Money::Franc(amount, _) => Franc::times(amount, multiplier),
         }
     }
     fn currency(&self) -> &str {
         match self {
+            Money::Money(_, _) => "",
             Money::Dollar(_, currency) => currency,
             Money::Franc(_, currency) => currency,
         }
