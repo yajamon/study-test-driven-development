@@ -56,7 +56,7 @@ pub struct Franc {
 
 impl Franc {
     fn new(amount: i64, currency: String) -> Money {
-        Money::Franc("CHF".to_string(), Franc { amount })
+        Money::Franc(currency, Franc { amount })
     }
     fn times(&self, multiplier: i64) -> Money {
         Money::franc(self.amount * multiplier)
