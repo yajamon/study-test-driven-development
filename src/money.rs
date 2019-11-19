@@ -1,7 +1,8 @@
 #[derive(Debug)]
 pub enum Money {
-    Dollar(Dollar),
-    Franc(Franc),
+    // currency, inner
+    Dollar(String, Dollar),
+    Franc(String, Franc),
 }
 
 impl Money {
@@ -13,22 +14,22 @@ impl Money {
     }
     fn times(&self, multiplier: i64) -> Self {
         match self {
-            Money::Dollar(dollar) => dollar.times(multiplier),
-            Money::Franc(franc) => franc.times(multiplier),
+            Money::Dollar(_, dollar) => dollar.times(multiplier),
+            Money::Franc(_, franc) => franc.times(multiplier),
         }
     }
     fn currency(&self) -> &str {
         match self {
-            Money::Dollar(dollar) => dollar.currency(),
-            Money::Franc(franc) => franc.currency(),
+            Money::Dollar(currency, _) => currency,
+            Money::Franc(currency, _) => currency,
         }
     }
 }
 impl PartialEq for Money {
     fn eq(&self, other: &Self) -> bool {
         match (self, other) {
-            (Money::Dollar(left), Money::Dollar(right)) => left == right,
-            (Money::Franc(left), Money::Franc(right)) => left == right,
+            (Money::Dollar(_, left), Money::Dollar(_, right)) => left == right,
+            (Money::Franc(_, left), Money::Franc(_, right)) => left == right,
             _ => false,
         }
     }
@@ -37,42 +38,28 @@ impl PartialEq for Money {
 #[derive(Debug, PartialEq)]
 pub struct Dollar {
     amount: i64,
-    currency: String,
 }
 
 impl Dollar {
     fn new(amount: i64) -> Money {
-        Money::Dollar(Dollar {
-            amount,
-            currency: "USD".to_string(),
-        })
+        Money::Dollar("USD".to_string(), Dollar { amount })
     }
     fn times(&self, multiplier: i64) -> Money {
         Dollar::new(self.amount * multiplier)
-    }
-    fn currency(&self) -> &str {
-        &self.currency
     }
 }
 
 #[derive(Debug, PartialEq)]
 pub struct Franc {
     amount: i64,
-    currency: String,
 }
 
 impl Franc {
     fn new(amount: i64) -> Money {
-        Money::Franc(Franc {
-            amount,
-            currency: "CHF".to_string(),
-        })
+        Money::Franc("CHF".to_string(), Franc { amount })
     }
     fn times(&self, multiplier: i64) -> Money {
         Franc::new(self.amount * multiplier)
-    }
-    fn currency(&self) -> &str {
-        &self.currency
     }
 }
 
