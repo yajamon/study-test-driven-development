@@ -16,7 +16,7 @@ impl Money {
     fn times(&self, multiplier: i64) -> Self {
         match self {
             Money::Money(_, _) => Money::Money(0, String::new()),
-            Money::Dollar(amount, _) => Dollar::times(amount, multiplier),
+            Money::Dollar(amount, currency) => Dollar::times(amount, multiplier, &currency),
             Money::Franc(amount, currency) => Franc::times(amount, multiplier, &currency),
         }
     }
@@ -48,8 +48,8 @@ impl PartialEq for Money {
 pub struct Dollar {}
 
 impl Dollar {
-    fn times(amount: &i64, multiplier: i64) -> Money {
-        Money::dollar(amount * multiplier)
+    fn times(amount: &i64, multiplier: i64, currency: &str) -> Money {
+        Money::Money(amount * multiplier, currency.to_string())
     }
 }
 
