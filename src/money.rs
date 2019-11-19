@@ -65,13 +65,6 @@ mod test {
     }
 
     #[test]
-    fn test_franc_multiplication() {
-        let five = Money::franc(5);
-        assert_eq!(Money::franc(10), five.times(2));
-        assert_eq!(Money::franc(15), five.times(3));
-    }
-
-    #[test]
     fn test_currency() {
         assert_eq!("USD", Money::dollar(1).currency());
         assert_eq!("CHF", Money::franc(1).currency());
