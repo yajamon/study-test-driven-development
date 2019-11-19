@@ -2,7 +2,7 @@
 pub enum Money {
     // amount, currency, inner
     Dollar(i64, String, Dollar),
-    Franc(String, Franc),
+    Franc(i64, String, Franc),
 }
 
 impl Money {
@@ -15,13 +15,13 @@ impl Money {
     fn times(&self, multiplier: i64) -> Self {
         match self {
             Money::Dollar(amount, _, dollar) => dollar.times(amount, multiplier),
-            Money::Franc(_, franc) => franc.times(franc.amount, multiplier),
+            Money::Franc(amount, _, franc) => franc.times(amount, multiplier),
         }
     }
     fn currency(&self) -> &str {
         match self {
             Money::Dollar(_, currency, _) => currency,
-            Money::Franc(currency, _) => currency,
+            Money::Franc(_, currency, _) => currency,
         }
     }
 }
@@ -31,7 +31,9 @@ impl PartialEq for Money {
             (Money::Dollar(lamount, _, left), Money::Dollar(ramount, _, right)) => {
                 lamount == ramount && left == right
             }
-            (Money::Franc(_, left), Money::Franc(_, right)) => left == right,
+            (Money::Franc(lamount, _, left), Money::Franc(ramount, _, right)) => {
+                lamount == ramount && left == right
+            }
             _ => false,
         }
     }
@@ -50,15 +52,13 @@ impl Dollar {
 }
 
 #[derive(Debug, PartialEq)]
-pub struct Franc {
-    amount: i64,
-}
+pub struct Franc {}
 
 impl Franc {
     fn new(amount: i64, currency: String) -> Money {
-        Money::Franc(currency, Franc { amount })
+        Money::Franc(amount, currency, Franc {})
     }
-    fn times(&self, amount: i64, multiplier: i64) -> Money {
+    fn times(&self, amount: &i64, multiplier: i64) -> Money {
         Money::franc(amount * multiplier)
     }
 }
