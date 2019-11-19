@@ -30,11 +30,17 @@ impl Money {
 }
 impl PartialEq for Money {
     fn eq(&self, other: &Self) -> bool {
-        match (self, other) {
-            (Money::Dollar(lamount, _), Money::Dollar(ramount, _)) => lamount == ramount,
-            (Money::Franc(lamount, _), Money::Franc(ramount, _)) => lamount == ramount,
-            _ => false,
-        }
+        let left = match self {
+            Money::Dollar(amount, currency) => (amount, currency),
+            Money::Franc(amount, currency) => (amount, currency),
+            Money::Money(amount, currency) => (amount, currency),
+        };
+        let right = match other {
+            Money::Dollar(amount, currency) => (amount, currency),
+            Money::Franc(amount, currency) => (amount, currency),
+            Money::Money(amount, currency) => (amount, currency),
+        };
+        left == right
     }
 }
 
