@@ -8,7 +8,7 @@ pub enum Money {
 
 impl Money {
     fn dollar(amount: i64) -> Money {
-        Money::Dollar(amount, "USD".to_string())
+        Money::Money(amount, "USD".to_string())
     }
     fn franc(amount: i64) -> Money {
         Money::Money(amount, "CHF".to_string())
