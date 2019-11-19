@@ -5,17 +5,18 @@ pub enum Money {
 }
 
 impl Money {
+    fn new(amount: i64, currency: String) -> Money {
+        Money::Money(amount, currency)
+    }
     fn dollar(amount: i64) -> Money {
-        Money::Money(amount, "USD".to_string())
+        Money::new(amount, "USD".to_string())
     }
     fn franc(amount: i64) -> Money {
-        Money::Money(amount, "CHF".to_string())
+        Money::new(amount, "CHF".to_string())
     }
     fn times(&self, multiplier: i64) -> Self {
         match self {
-            Money::Money(amount, currency) => {
-                Money::Money(amount * multiplier, currency.to_string())
-            }
+            Money::Money(amount, currency) => Money::new(amount * multiplier, currency.to_string()),
         }
     }
     fn currency(&self) -> &str {
