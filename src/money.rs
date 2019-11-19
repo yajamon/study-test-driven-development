@@ -17,7 +17,7 @@ impl Money {
         match self {
             Money::Money(_, _) => Money::Money(0, String::new()),
             Money::Dollar(amount, _) => Dollar::times(amount, multiplier),
-            Money::Franc(amount, _) => Franc::times(amount, multiplier),
+            Money::Franc(amount, currency) => Franc::times(amount, multiplier, &currency),
         }
     }
     fn currency(&self) -> &str {
@@ -57,8 +57,8 @@ impl Dollar {
 pub struct Franc {}
 
 impl Franc {
-    fn times(amount: &i64, multiplier: i64) -> Money {
-        Money::franc(amount * multiplier)
+    fn times(amount: &i64, multiplier: i64, currency: &str) -> Money {
+        Money::Money(amount * multiplier, currency.to_string())
     }
 }
 
