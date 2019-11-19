@@ -10,7 +10,7 @@ impl Money {
         Dollar::new(amount)
     }
     fn franc(amount: i64) -> Money {
-        Franc::new(amount, String::new())
+        Franc::new(amount, "CHF".to_string())
     }
     fn times(&self, multiplier: i64) -> Self {
         match self {
