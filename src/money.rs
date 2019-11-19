@@ -14,8 +14,8 @@ impl Money {
     }
     fn times(&self, multiplier: i64) -> Self {
         match self {
-            Money::Dollar(amount, _, dollar) => dollar.times(amount, multiplier),
-            Money::Franc(amount, _, franc) => franc.times(amount, multiplier),
+            Money::Dollar(amount, _, _) => Dollar::times(amount, multiplier),
+            Money::Franc(amount, _, _) => Franc::times(amount, multiplier),
         }
     }
     fn currency(&self) -> &str {
@@ -46,7 +46,7 @@ impl Dollar {
     fn new(amount: i64, currency: String) -> Money {
         Money::Dollar(amount, currency, Dollar {})
     }
-    fn times(&self, amount: &i64, multiplier: i64) -> Money {
+    fn times(amount: &i64, multiplier: i64) -> Money {
         Money::dollar(amount * multiplier)
     }
 }
@@ -58,7 +58,7 @@ impl Franc {
     fn new(amount: i64, currency: String) -> Money {
         Money::Franc(amount, currency, Franc {})
     }
-    fn times(&self, amount: &i64, multiplier: i64) -> Money {
+    fn times(amount: &i64, multiplier: i64) -> Money {
         Money::franc(amount * multiplier)
     }
 }
