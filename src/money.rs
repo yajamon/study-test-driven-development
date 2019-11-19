@@ -54,17 +54,21 @@ impl Dollar {
 #[derive(Debug, PartialEq)]
 pub struct Franc {
     amount: i64,
+    currency: String,
 }
 
 impl Franc {
     fn new(amount: i64) -> Money {
-        Money::Franc(Franc { amount })
+        Money::Franc(Franc {
+            amount,
+            currency: "CHF".to_string(),
+        })
     }
     fn times(&self, multiplier: i64) -> Money {
         Franc::new(self.amount * multiplier)
     }
     fn currency(&self) -> &str {
-        "CHF"
+        &self.currency
     }
 }
 
