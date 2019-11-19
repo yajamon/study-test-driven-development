@@ -22,16 +22,6 @@ impl Money {
     }
 }
 
-#[derive(Debug, PartialEq)]
-pub struct Dollar {}
-
-impl Dollar {}
-
-#[derive(Debug, PartialEq)]
-pub struct Franc {}
-
-impl Franc {}
-
 #[cfg(test)]
 mod test {
     use super::*;
