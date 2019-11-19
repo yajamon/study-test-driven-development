@@ -45,4 +45,10 @@ mod test {
         assert_eq!("USD", Money::dollar(1).currency());
         assert_eq!("CHF", Money::franc(1).currency());
     }
+
+    #[test]
+    fn test_simple_addition() {
+        let sum = Money::dollar(5).plus(&Money::dollar(5));
+        assert_eq!(Money::dollar(10), sum);
+    }
 }
