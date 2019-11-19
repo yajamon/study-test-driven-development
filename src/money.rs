@@ -70,13 +70,6 @@ mod test {
         assert_eq!(Money::dollar(5) == Money::dollar(6), false);
         assert_eq!(Money::dollar(5) == Money::franc(5), false);
     }
-    #[test]
-    fn test_different_type_equality() {
-        assert_eq!(
-            Money::Money(10, "CHF".to_string()) == Money::Franc(10, "CHF".to_string()),
-            true
-        );
-    }
 
     #[test]
     fn test_franc_multiplication() {
