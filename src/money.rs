@@ -37,17 +37,21 @@ impl PartialEq for Money {
 #[derive(Debug, PartialEq)]
 pub struct Dollar {
     amount: i64,
+    currency: String,
 }
 
 impl Dollar {
     fn new(amount: i64) -> Money {
-        Money::Dollar(Dollar { amount })
+        Money::Dollar(Dollar {
+            amount,
+            currency: "USD".to_string(),
+        })
     }
     fn times(&self, multiplier: i64) -> Money {
         Dollar::new(self.amount * multiplier)
     }
     fn currency(&self) -> &str {
-        "USD"
+        &self.currency
     }
 }
 
