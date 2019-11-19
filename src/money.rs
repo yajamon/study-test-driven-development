@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Money {
     amount: i64,
     currency: String,
@@ -19,14 +19,6 @@ impl Money {
     }
     fn currency(&self) -> &str {
         &self.currency
-    }
-}
-impl PartialEq for Money {
-    fn eq(&self, other: &Self) -> bool {
-        let left = (self.amount, &self.currency);
-        let right = (other.amount, &other.currency);
-
-        left == right
     }
 }
 
