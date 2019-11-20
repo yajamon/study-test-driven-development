@@ -1,5 +1,5 @@
 pub trait Expression {
-    fn reduce(&self, to: &str) -> Money;
+    fn reduce(&self, bank: &Bank, to: &str) -> Money;
 }
 
 #[derive(Debug, PartialEq)]
@@ -30,7 +30,7 @@ impl Money {
 }
 
 impl Expression for Money {
-    fn reduce(&self, to: &str) -> Money {
+    fn reduce(&self, bank: &Bank, to: &str) -> Money {
         let rate = if self.currency == "CHF" && to == "USD" {
             2
         } else {
@@ -47,7 +47,7 @@ impl Bank {
         Bank {}
     }
     fn reduce(&self, source: &impl Expression, to: &str) -> Money {
-        source.reduce(to)
+        source.reduce(self, to)
     }
     fn add_rate(&self, from: &str, to: &str, rate: i64) {}
 }
@@ -62,7 +62,7 @@ impl<'a> Sum<'a> {
     }
 }
 impl<'a> Expression for Sum<'a> {
-    fn reduce(&self, to: &str) -> Money {
+    fn reduce(&self, bank: &Bank, to: &str) -> Money {
         let amount = self.augend.amount + self.addend.amount;
         Money::new(amount, to.to_string())
     }
