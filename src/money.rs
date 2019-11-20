@@ -91,4 +91,14 @@ mod test {
         assert_eq!(&five, sum.augend);
         assert_eq!(&five, sum.addend);
     }
+
+    #[test]
+    fn test_reduce_sum() {
+        let three = Money::dollar(3);
+        let four = Money::dollar(4);
+        let sum = Sum::new(&three, &four);
+        let bank = Bank::new();
+        let result = bank.reduce(&sum, "USD");
+        assert_eq!(Money::dollar(7), result);
+    }
 }
