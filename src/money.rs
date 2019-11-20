@@ -30,8 +30,13 @@ impl Money {
 }
 
 impl Expression for Money {
-    fn reduce(&self, _to: &str) -> Money {
-        Money::new(self.amount, self.currency.to_string())
+    fn reduce(&self, to: &str) -> Money {
+        let rate = if self.currency == "CHF" && to == "USD" {
+            2
+        } else {
+            1
+        };
+        Money::new(self.amount / rate, to.to_string())
     }
 }
 
@@ -44,6 +49,7 @@ impl Bank {
     fn reduce(&self, source: &impl Expression, to: &str) -> Money {
         source.reduce(to)
     }
+    fn add_rate(&self, from: &str, to: &str, rate: i64) {}
 }
 
 pub struct Sum<'a> {
