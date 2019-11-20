@@ -31,11 +31,7 @@ impl Money {
 
 impl Expression for Money {
     fn reduce(&self, bank: &Bank, to: &str) -> Money {
-        let rate = if self.currency == "CHF" && to == "USD" {
-            2
-        } else {
-            1
-        };
+        let rate = bank.rate(&self.currency, to);
         Money::new(self.amount / rate, to.to_string())
     }
 }
@@ -50,6 +46,14 @@ impl Bank {
         source.reduce(self, to)
     }
     fn add_rate(&self, from: &str, to: &str, rate: i64) {}
+
+    fn rate(&self, from: &str, to: &str) -> i64 {
+        if from == "CHF" && to == "USD" {
+            2
+        } else {
+            1
+        }
+    }
 }
 
 pub struct Sum<'a> {
