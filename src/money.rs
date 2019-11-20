@@ -1,4 +1,4 @@
-trait Expression {}
+pub trait Expression {}
 
 #[derive(Debug, PartialEq)]
 pub struct Money {
@@ -44,6 +44,12 @@ pub struct Sum<'a> {
     augend: &'a Money,
     addend: &'a Money,
 }
+impl<'a> Sum<'a> {
+    pub fn new(augend: &'a Money, addend: &'a Money) -> Sum<'a> {
+        Sum { augend, addend }
+    }
+}
+impl<'a> Expression for Sum<'a> {}
 
 #[cfg(test)]
 mod test {
