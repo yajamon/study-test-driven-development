@@ -27,6 +27,8 @@ impl Money {
     }
 }
 
+impl Expression for Money {}
+
 pub struct Bank {}
 
 impl Bank {
@@ -67,7 +69,7 @@ mod test {
         let five = Money::dollar(5);
         let sum = five.plus(&five);
         let bank = Bank::new();
-        let reduced = bank.reduce(sum, "USD");
+        let reduced = bank.reduce(&sum, "USD");
         assert_eq!(Money::dollar(10), reduced);
     }
 }
