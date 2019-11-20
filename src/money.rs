@@ -42,8 +42,7 @@ impl Bank {
         Bank {}
     }
     fn reduce(&self, source: &impl Expression, to: &str) -> Money {
-        let sum = source;
-        sum.reduce(to)
+        source.reduce(to)
     }
 }
 
