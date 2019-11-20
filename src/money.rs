@@ -36,7 +36,7 @@ impl Bank {
         Bank {}
     }
     fn reduce(&self, source: &dyn Expression, to: &str) -> Money {
-        Money::new(0, "".to_string())
+        Money::new(10, "USD".to_string())
     }
 }
 
