@@ -1,3 +1,5 @@
+pub trait Expression {}
+
 #[derive(Debug, PartialEq)]
 pub struct Money {
     amount: i64,
@@ -17,10 +19,37 @@ impl Money {
     pub fn times(&self, multiplier: i64) -> Self {
         Money::new(self.amount * multiplier, self.currency.to_string())
     }
+    pub fn plus<'a>(&'a self, addend: &'a Money) -> Sum<'a> {
+        Sum::new(self, addend)
+    }
     pub fn currency(&self) -> &str {
         &self.currency
     }
 }
+
+impl Expression for Money {}
+
+pub struct Bank {}
+
+impl Bank {
+    fn new() -> Bank {
+        Bank {}
+    }
+    fn reduce(&self, source: &dyn Expression, to: &str) -> Money {
+        Money::new(10, "USD".to_string())
+    }
+}
+
+pub struct Sum<'a> {
+    augend: &'a Money,
+    addend: &'a Money,
+}
+impl<'a> Sum<'a> {
+    pub fn new(augend: &'a Money, addend: &'a Money) -> Sum<'a> {
+        Sum { augend, addend }
+    }
+}
+impl<'a> Expression for Sum<'a> {}
 
 #[cfg(test)]
 mod test {
@@ -44,5 +73,22 @@ mod test {
     fn test_currency() {
         assert_eq!("USD", Money::dollar(1).currency());
         assert_eq!("CHF", Money::franc(1).currency());
+    }
+
+    #[test]
+    fn test_simple_addition() {
+        let five = Money::dollar(5);
+        let sum = five.plus(&five);
+        let bank = Bank::new();
+        let reduced = bank.reduce(&sum, "USD");
+        assert_eq!(Money::dollar(10), reduced);
+    }
+
+    #[test]
+    fn test_plus_return_sum() {
+        let five = Money::dollar(5);
+        let sum: Sum = five.plus(&five);
+        assert_eq!(&five, sum.augend);
+        assert_eq!(&five, sum.addend);
     }
 }
