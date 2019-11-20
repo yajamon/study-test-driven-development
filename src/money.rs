@@ -1,4 +1,6 @@
-pub trait Expression {}
+pub trait Expression {
+    fn reduce(&self, to: &str) -> Money;
+}
 
 #[derive(Debug, PartialEq)]
 pub struct Money {
@@ -27,7 +29,11 @@ impl Money {
     }
 }
 
-impl Expression for Money {}
+impl Expression for Money {
+    fn reduce(&self, _to: &str) -> Money {
+        Money::new(self.amount, self.currency.to_string())
+    }
+}
 
 pub struct Bank {}
 
@@ -49,12 +55,13 @@ impl<'a> Sum<'a> {
     pub fn new(augend: &'a Money, addend: &'a Money) -> Sum<'a> {
         Sum { augend, addend }
     }
-    pub fn reduce(&self, to: &str) -> Money {
+}
+impl<'a> Expression for Sum<'a> {
+    fn reduce(&self, to: &str) -> Money {
         let amount = self.augend.amount + self.addend.amount;
         Money::new(amount, to.to_string())
     }
 }
-impl<'a> Expression for Sum<'a> {}
 
 #[cfg(test)]
 mod test {
