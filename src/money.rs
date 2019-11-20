@@ -40,6 +40,11 @@ impl Bank {
     }
 }
 
+pub struct Sum<'a> {
+    augend: &'a Money,
+    addend: &'a Money,
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
