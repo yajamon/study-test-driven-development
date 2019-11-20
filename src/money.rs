@@ -1,3 +1,5 @@
+trait Expression {}
+
 #[derive(Debug, PartialEq)]
 pub struct Money {
     amount: i64,
@@ -31,7 +33,7 @@ impl Bank {
     fn new() -> Bank {
         Bank {}
     }
-    fn reduce(&self, source: &Expression, to: &str) -> Money {
+    fn reduce(&self, source: &dyn Expression, to: &str) -> Money {
         Money::new(0, "".to_string())
     }
 }
