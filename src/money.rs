@@ -106,4 +106,11 @@ mod test {
         let result = bank.reduce(&sum, "USD");
         assert_eq!(Money::dollar(7), result);
     }
+
+    #[test]
+    fn test_reduce_money() {
+        let bank = Bank::new();
+        let result = bank.reduce(&Money::dollar(1), "USD");
+        assert_eq!(Money::dollar(1), result);
+    }
 }
