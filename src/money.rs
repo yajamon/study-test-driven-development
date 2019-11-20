@@ -35,8 +35,9 @@ impl Bank {
     fn new() -> Bank {
         Bank {}
     }
-    fn reduce(&self, source: &dyn Expression, to: &str) -> Money {
-        Money::new(10, "USD".to_string())
+    fn reduce(&self, source: &Sum, to: &str) -> Money {
+        let amount = source.augend.amount + source.addend.amount;
+        Money::new(amount, to.to_string())
     }
 }
 
