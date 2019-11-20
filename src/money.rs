@@ -36,8 +36,8 @@ impl Bank {
         Bank {}
     }
     fn reduce(&self, source: &Sum, to: &str) -> Money {
-        let amount = source.augend.amount + source.addend.amount;
-        Money::new(amount, to.to_string())
+        let sum = source;
+        sum.reduce(to)
     }
 }
 
@@ -48,6 +48,10 @@ pub struct Sum<'a> {
 impl<'a> Sum<'a> {
     pub fn new(augend: &'a Money, addend: &'a Money) -> Sum<'a> {
         Sum { augend, addend }
+    }
+    pub fn reduce(&self, to: &str) -> Money {
+        let amount = self.augend.amount + self.addend.amount;
+        Money::new(amount, to.to_string())
     }
 }
 impl<'a> Expression for Sum<'a> {}
