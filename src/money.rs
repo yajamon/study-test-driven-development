@@ -25,6 +25,17 @@ impl Money {
     }
 }
 
+pub struct Bank {}
+
+impl Bank {
+    fn new() -> Bank {
+        Bank {}
+    }
+    fn reduce(&self, source: &Expression, to: &str) -> Money {
+        Money::new(0, "".to_string())
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
