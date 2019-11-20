@@ -76,9 +76,8 @@ mod test {
     #[test]
     fn test_plus_return_sum() {
         let five = Money::dollar(5);
-        let result = five.plus(&five);
-        let sum = result as Sum;
-        assert_eq!(five, sum.augend);
-        assert_eq!(five, sum.addend);
+        let sum: Sum = five.plus(&five);
+        assert_eq!(&five, sum.augend);
+        assert_eq!(&five, sum.addend);
     }
 }
