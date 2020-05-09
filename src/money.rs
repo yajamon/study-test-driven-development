@@ -1,4 +1,8 @@
-pub trait Expression {}
+use std::collections::HashMap;
+
+pub trait Expression {
+    fn reduce(&self, bank: &Bank, to: &str) -> Money;
+}
 
 #[derive(Debug, PartialEq)]
 pub struct Money {
@@ -27,16 +31,37 @@ impl Money {
     }
 }
 
-impl Expression for Money {}
+impl Expression for Money {
+    fn reduce(&self, bank: &Bank, to: &str) -> Money {
+        let rate = bank.rate(&self.currency, to);
+        Money::new(self.amount / rate, to.to_string())
+    }
+}
 
-pub struct Bank {}
+pub struct Bank {
+    rates: HashMap<Pair, i64>,
+}
 
 impl Bank {
     fn new() -> Bank {
-        Bank {}
+        Bank {
+            rates: HashMap::new(),
+        }
     }
-    fn reduce(&self, source: &dyn Expression, to: &str) -> Money {
-        Money::new(10, "USD".to_string())
+    fn reduce(&self, source: &impl Expression, to: &str) -> Money {
+        source.reduce(self, to)
+    }
+    fn add_rate(&mut self, from: &str, to: &str, rate: i64) {
+        self.rates
+            .insert(Pair::new(from.to_string(), to.to_string()), rate);
+    }
+
+    fn rate(&self, from: &str, to: &str) -> i64 {
+        if from == to {
+            return 1;
+        }
+        let pair = Pair::new(from.to_string(), to.to_string());
+        self.rates.get(&pair).unwrap_or(&0).clone()
     }
 }
 
@@ -49,7 +74,24 @@ impl<'a> Sum<'a> {
         Sum { augend, addend }
     }
 }
-impl<'a> Expression for Sum<'a> {}
+impl<'a> Expression for Sum<'a> {
+    fn reduce(&self, bank: &Bank, to: &str) -> Money {
+        let amount = self.augend.amount + self.addend.amount;
+        Money::new(amount, to.to_string())
+    }
+}
+
+#[derive(Debug, PartialEq, Hash, Eq)]
+pub struct Pair {
+    from: String,
+    to: String,
+}
+
+impl Pair {
+    fn new(from: String, to: String) -> Pair {
+        Pair { from, to }
+    }
+}
 
 #[cfg(test)]
 mod test {
@@ -90,5 +132,36 @@ mod test {
         let sum: Sum = five.plus(&five);
         assert_eq!(&five, sum.augend);
         assert_eq!(&five, sum.addend);
+    }
+
+    #[test]
+    fn test_reduce_sum() {
+        let three = Money::dollar(3);
+        let four = Money::dollar(4);
+        let sum = Sum::new(&three, &four);
+        let bank = Bank::new();
+        let result = bank.reduce(&sum, "USD");
+        assert_eq!(Money::dollar(7), result);
+    }
+
+    #[test]
+    fn test_reduce_money() {
+        let bank = Bank::new();
+        let result = bank.reduce(&Money::dollar(1), "USD");
+        assert_eq!(Money::dollar(1), result);
+    }
+
+    #[test]
+    fn test_reduce_money_different_currency() {
+        let bank = &mut Bank::new();
+        bank.add_rate("CHF", "USD", 2);
+        let result = bank.reduce(&Money::franc(2), "USD");
+        assert_eq!(Money::dollar(1), result);
+    }
+
+    #[test]
+    fn test_identity_rate() {
+        let bank = Bank::new();
+        assert_eq!(1, bank.rate("USD", "USD"));
     }
 }
