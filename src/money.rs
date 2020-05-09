@@ -51,7 +51,10 @@ impl Bank {
     fn reduce(&self, source: &impl Expression, to: &str) -> Money {
         source.reduce(self, to)
     }
-    fn add_rate(&self, from: &str, to: &str, rate: i64) {}
+    fn add_rate(&mut self, from: &str, to: &str, rate: i64) {
+        self.rates
+            .insert(Pair::new(from.to_string(), to.to_string()), rate);
+    }
 
     fn rate(&self, from: &str, to: &str) -> i64 {
         if from == "CHF" && to == "USD" {
@@ -150,7 +153,7 @@ mod test {
 
     #[test]
     fn test_reduce_money_different_currency() {
-        let bank = Bank::new();
+        let bank = &mut Bank::new();
         bank.add_rate("CHF", "USD", 2);
         let result = bank.reduce(&Money::franc(2), "USD");
         assert_eq!(Money::dollar(1), result);
