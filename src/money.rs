@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 pub trait Expression {
     fn reduce(&self, bank: &Bank, to: &str) -> Money;
 }
@@ -36,11 +38,15 @@ impl Expression for Money {
     }
 }
 
-pub struct Bank {}
+pub struct Bank {
+    rates: HashMap<Pair, i64>,
+}
 
 impl Bank {
     fn new() -> Bank {
-        Bank {}
+        Bank {
+            rates: HashMap::new(),
+        }
     }
     fn reduce(&self, source: &impl Expression, to: &str) -> Money {
         source.reduce(self, to)
