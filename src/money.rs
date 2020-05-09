@@ -57,11 +57,8 @@ impl Bank {
     }
 
     fn rate(&self, from: &str, to: &str) -> i64 {
-        if from == "CHF" && to == "USD" {
-            2
-        } else {
-            1
-        }
+        let pair = Pair::new(from.to_string(), to.to_string());
+        self.rates.get(&pair).unwrap_or(&0).clone()
     }
 }
 
@@ -157,5 +154,11 @@ mod test {
         bank.add_rate("CHF", "USD", 2);
         let result = bank.reduce(&Money::franc(2), "USD");
         assert_eq!(Money::dollar(1), result);
+    }
+
+    #[test]
+    fn test_identity_rate() {
+        let bank = Bank::new();
+        assert_eq!(1, bank.rate("USD", "USD"));
     }
 }
