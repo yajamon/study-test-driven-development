@@ -72,6 +72,18 @@ impl<'a> Expression for Sum<'a> {
     }
 }
 
+#[derive(Debug, PartialEq, Hash, Eq)]
+pub struct Pair {
+    from: String,
+    to: String,
+}
+
+impl Pair {
+    fn new(from: String, to: String) -> Pair {
+        Pair { from, to }
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
