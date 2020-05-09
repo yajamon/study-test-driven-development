@@ -164,4 +164,14 @@ mod test {
         let bank = Bank::new();
         assert_eq!(1, bank.rate("USD", "USD"));
     }
+
+    #[test]
+    fn test_mixed_addition() {
+        let five_bucks = Money::dollar(5);
+        let ten_francs = Money::franc(10);
+        let bank = &mut Bank::new();
+        bank.add_rate("CHF", "USD", 2);
+        let result = bank.reduce(&five_bucks.plus(&ten_francs), "USD");
+        assert_eq!(Money::dollar(10), result);
+    }
 }
