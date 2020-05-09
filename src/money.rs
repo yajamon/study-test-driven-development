@@ -57,6 +57,9 @@ impl Bank {
     }
 
     fn rate(&self, from: &str, to: &str) -> i64 {
+        if from == to {
+            return 1;
+        }
         let pair = Pair::new(from.to_string(), to.to_string());
         self.rates.get(&pair).unwrap_or(&0).clone()
     }
