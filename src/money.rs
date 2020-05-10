@@ -23,7 +23,7 @@ impl Money {
     pub fn times(&self, multiplier: i64) -> Self {
         Money::new(self.amount * multiplier, self.currency.to_string())
     }
-    pub fn plus<'a>(&'a self, addend: &'a Money) -> Sum<'a> {
+    pub fn plus<'a>(&'a self, addend: &'a Money) -> Sum<Money, Money> {
         Sum::new(self, addend)
     }
     pub fn currency(&self) -> &str {
@@ -65,16 +65,16 @@ impl Bank {
     }
 }
 
-pub struct Sum<'a> {
-    augend: &'a Money,
-    addend: &'a Money,
+pub struct Sum<'a, T: Expression, U: Expression> {
+    augend: &'a T,
+    addend: &'a U,
 }
-impl<'a> Sum<'a> {
-    pub fn new(augend: &'a Money, addend: &'a Money) -> Sum<'a> {
+impl<'a, T: Expression, U: Expression> Sum<'a, T, U> {
+    pub fn new(augend: &'a T, addend: &'a U) -> Sum<'a, T, U> {
         Sum { augend, addend }
     }
 }
-impl<'a> Expression for Sum<'a> {
+impl<'a, T: Expression, U: Expression> Expression for Sum<'a, T, U> {
     fn reduce(&self, bank: &Bank, to: &str) -> Money {
         let amount = self.augend.reduce(bank, to).amount + self.addend.reduce(bank, to).amount;
         Money::new(amount, to.to_string())
@@ -129,7 +129,7 @@ mod test {
     #[test]
     fn test_plus_return_sum() {
         let five = Money::dollar(5);
-        let sum: Sum = five.plus(&five);
+        let sum = five.plus(&five);
         assert_eq!(&five, sum.augend);
         assert_eq!(&five, sum.addend);
     }
