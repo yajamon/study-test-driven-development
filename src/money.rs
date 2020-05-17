@@ -1,12 +1,12 @@
 use std::collections::HashMap;
 
-pub trait Expression {
+pub trait Expression: Clone {
     type BaseType: Expression;
     fn reduce(&self, bank: &Bank, to: &str) -> Money;
-    fn plus<'a, Addend: Expression>(&'a self, addend: &'a Addend) -> Sum<Self::BaseType, Addend>;
+    fn plus<Addend: Expression>(&self, addend: &Addend) -> Sum<Self::BaseType, Addend>;
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Money {
     amount: i64,
     currency: String,
@@ -36,8 +36,8 @@ impl Expression for Money {
         let rate = bank.rate(&self.currency, to);
         Money::new(self.amount / rate, to.to_string())
     }
-    fn plus<'a, T: Expression>(&'a self, addend: &'a T) -> Sum<Self, T> {
-        Sum::new(self, addend)
+    fn plus<T: Expression>(&self, addend: &T) -> Sum<Self, T> {
+        Sum::new(self.clone(), addend.clone())
     }
 }
 
@@ -68,23 +68,24 @@ impl Bank {
     }
 }
 
-pub struct Sum<'a, T: Expression, U: Expression> {
-    augend: &'a T,
-    addend: &'a U,
+#[derive(Clone)]
+pub struct Sum<T: Expression, U: Expression> {
+    augend: T,
+    addend: U,
 }
-impl<'out, T: Expression, U: Expression> Sum<'out, T, U> {
-    pub fn new<'a>(augend: &'a T, addend: &'a U) -> Sum<'a, T, U> {
+impl<T: Expression, U: Expression> Sum<T, U> {
+    pub fn new(augend: T, addend: U) -> Sum<T, U> {
         Sum { augend, addend }
     }
 }
-impl<'out, T: Expression, U: Expression> Expression for Sum<'out, T, U> {
+impl<T: Expression, U: Expression> Expression for Sum<T, U> {
     type BaseType = Self;
     fn reduce(&self, bank: &Bank, to: &str) -> Money {
         let amount = self.augend.reduce(bank, to).amount + self.addend.reduce(bank, to).amount;
         Money::new(amount, to.to_string())
     }
-    fn plus<'a, Addend: Expression>(&'a self, addend: &'a Addend) -> Sum<'a, Self, Addend> {
-        Sum::new(self, addend)
+    fn plus<Addend: Expression>(&self, addend: &Addend) -> Sum<Self, Addend> {
+        Sum::new(self.clone(), addend.clone())
     }
 }
 
@@ -137,15 +138,15 @@ mod test {
     fn test_plus_return_sum() {
         let five = Money::dollar(5);
         let sum = five.plus(&five);
-        assert_eq!(&five, sum.augend);
-        assert_eq!(&five, sum.addend);
+        assert_eq!(&five, &sum.augend);
+        assert_eq!(&five, &sum.addend);
     }
 
     #[test]
     fn test_reduce_sum() {
         let three = Money::dollar(3);
         let four = Money::dollar(4);
-        let sum = Sum::new(&three, &four);
+        let sum = Sum::new(three.clone(), four.clone());
         let bank = Bank::new();
         let result = bank.reduce(&sum, "USD");
         assert_eq!(Money::dollar(7), result);
@@ -188,7 +189,7 @@ mod test {
         let ten_francs = Money::franc(10);
         let bank = &mut Bank::new();
         bank.add_rate("CHF", "USD", 2);
-        let sum = Sum::new(&five_bucks, &ten_francs);
+        let sum = Sum::new(five_bucks.clone(), ten_francs.clone());
         let sum = sum.plus(&five_bucks);
         let result = bank.reduce(&sum, "USD");
         assert_eq!(Money::dollar(15), result);
