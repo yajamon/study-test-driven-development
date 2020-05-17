@@ -4,6 +4,7 @@ pub trait Expression: Clone {
     type BaseType: Expression;
     fn reduce(&self, bank: &Bank, to: &str) -> Money;
     fn plus<Addend: Expression>(&self, addend: &Addend) -> Sum<Self::BaseType, Addend>;
+    fn times(&self, multiplier: i64) -> Self;
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -22,9 +23,6 @@ impl Money {
     pub fn franc(amount: i64) -> Money {
         Money::new(amount, "CHF".to_string())
     }
-    pub fn times(&self, multiplier: i64) -> Self {
-        Money::new(self.amount * multiplier, self.currency.to_string())
-    }
     pub fn currency(&self) -> &str {
         &self.currency
     }
@@ -38,6 +36,9 @@ impl Expression for Money {
     }
     fn plus<T: Expression>(&self, addend: &T) -> Sum<Self, T> {
         Sum::new(self.clone(), addend.clone())
+    }
+    fn times(&self, multiplier: i64) -> Self {
+        Money::new(self.amount * multiplier, self.currency.to_string())
     }
 }
 
@@ -86,6 +87,12 @@ impl<T: Expression, U: Expression> Expression for Sum<T, U> {
     }
     fn plus<Addend: Expression>(&self, addend: &Addend) -> Sum<Self, Addend> {
         Sum::new(self.clone(), addend.clone())
+    }
+    fn times(&self, multiplier: i64) -> Self {
+        Sum::new(
+            self.augend.clone().times(multiplier),
+            self.addend.clone().times(multiplier),
+        )
     }
 }
 
@@ -201,8 +208,7 @@ mod test {
         let ten_francs = Money::franc(10);
         let bank = &mut Bank::new();
         bank.add_rate("CHF", "USD", 2);
-        let sum = Sum::new(&five_bucks, &ten_francs);
-        let sum = sum.times(2);
+        let sum = Sum::new(five_bucks, ten_francs).times(2);
         let result = bank.reduce(&sum, "USD");
         assert_eq!(Money::dollar(20), result);
     }
