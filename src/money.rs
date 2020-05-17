@@ -1,7 +1,9 @@
 use std::collections::HashMap;
 
 pub trait Expression {
+    type BaseType: Expression;
     fn reduce(&self, bank: &Bank, to: &str) -> Money;
+    fn plus<'a, Addend: Expression>(&'a self, addend: &'a Addend) -> Sum<Self::BaseType, Addend>;
 }
 
 #[derive(Debug, PartialEq)]
@@ -23,18 +25,19 @@ impl Money {
     pub fn times(&self, multiplier: i64) -> Self {
         Money::new(self.amount * multiplier, self.currency.to_string())
     }
-    pub fn plus<'a, T: Expression>(&'a self, addend: &'a T) -> Sum<Self, T> {
-        Sum::new(self, addend)
-    }
     pub fn currency(&self) -> &str {
         &self.currency
     }
 }
 
 impl Expression for Money {
+    type BaseType = Self;
     fn reduce(&self, bank: &Bank, to: &str) -> Money {
         let rate = bank.rate(&self.currency, to);
         Money::new(self.amount / rate, to.to_string())
+    }
+    fn plus<'a, T: Expression>(&'a self, addend: &'a T) -> Sum<Self, T> {
+        Sum::new(self, addend)
     }
 }
 
@@ -75,9 +78,13 @@ impl<'a, T: Expression, U: Expression> Sum<'a, T, U> {
     }
 }
 impl<'a, T: Expression, U: Expression> Expression for Sum<'a, T, U> {
+    type BaseType = Self;
     fn reduce(&self, bank: &Bank, to: &str) -> Money {
         let amount = self.augend.reduce(bank, to).amount + self.addend.reduce(bank, to).amount;
         Money::new(amount, to.to_string())
+    }
+    fn plus<'b, Addend: Expression>(&'b self, addend: &'b Addend) -> Sum<'b, Self, Addend> {
+        unimplemented!();
     }
 }
 
