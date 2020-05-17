@@ -72,18 +72,18 @@ pub struct Sum<'a, T: Expression, U: Expression> {
     augend: &'a T,
     addend: &'a U,
 }
-impl<'a, T: Expression, U: Expression> Sum<'a, T, U> {
-    pub fn new(augend: &'a T, addend: &'a U) -> Sum<'a, T, U> {
+impl<'out, T: Expression, U: Expression> Sum<'out, T, U> {
+    pub fn new<'a>(augend: &'a T, addend: &'a U) -> Sum<'a, T, U> {
         Sum { augend, addend }
     }
 }
-impl<'a, T: Expression, U: Expression> Expression for Sum<'a, T, U> {
+impl<'out, T: Expression, U: Expression> Expression for Sum<'out, T, U> {
     type BaseType = Self;
     fn reduce(&self, bank: &Bank, to: &str) -> Money {
         let amount = self.augend.reduce(bank, to).amount + self.addend.reduce(bank, to).amount;
         Money::new(amount, to.to_string())
     }
-    fn plus<'b, Addend: Expression>(&'b self, addend: &'b Addend) -> Sum<'b, Self, Addend> {
+    fn plus<'a, Addend: Expression>(&'a self, addend: &'a Addend) -> Sum<'a, Self, Addend> {
         Sum::new(self, addend)
     }
 }
