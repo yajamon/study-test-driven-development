@@ -1,7 +1,9 @@
 use std::collections::HashMap;
 
 pub trait Expression {
+    type BaseType: Expression;
     fn reduce(&self, bank: &Bank, to: &str) -> Money;
+    fn plus<'a, Addend: Expression>(&'a self, addend: &'a Addend) -> Sum<Self::BaseType, Addend>;
 }
 
 #[derive(Debug, PartialEq)]
@@ -23,18 +25,19 @@ impl Money {
     pub fn times(&self, multiplier: i64) -> Self {
         Money::new(self.amount * multiplier, self.currency.to_string())
     }
-    pub fn plus<'a>(&'a self, addend: &'a Money) -> Sum<'a> {
-        Sum::new(self, addend)
-    }
     pub fn currency(&self) -> &str {
         &self.currency
     }
 }
 
 impl Expression for Money {
+    type BaseType = Self;
     fn reduce(&self, bank: &Bank, to: &str) -> Money {
         let rate = bank.rate(&self.currency, to);
         Money::new(self.amount / rate, to.to_string())
+    }
+    fn plus<'a, T: Expression>(&'a self, addend: &'a T) -> Sum<Self, T> {
+        Sum::new(self, addend)
     }
 }
 
@@ -65,19 +68,23 @@ impl Bank {
     }
 }
 
-pub struct Sum<'a> {
-    augend: &'a Money,
-    addend: &'a Money,
+pub struct Sum<'a, T: Expression, U: Expression> {
+    augend: &'a T,
+    addend: &'a U,
 }
-impl<'a> Sum<'a> {
-    pub fn new(augend: &'a Money, addend: &'a Money) -> Sum<'a> {
+impl<'a, T: Expression, U: Expression> Sum<'a, T, U> {
+    pub fn new(augend: &'a T, addend: &'a U) -> Sum<'a, T, U> {
         Sum { augend, addend }
     }
 }
-impl<'a> Expression for Sum<'a> {
+impl<'a, T: Expression, U: Expression> Expression for Sum<'a, T, U> {
+    type BaseType = Self;
     fn reduce(&self, bank: &Bank, to: &str) -> Money {
-        let amount = self.augend.amount + self.addend.amount;
+        let amount = self.augend.reduce(bank, to).amount + self.addend.reduce(bank, to).amount;
         Money::new(amount, to.to_string())
+    }
+    fn plus<'b, Addend: Expression>(&'b self, addend: &'b Addend) -> Sum<'b, Self, Addend> {
+        unimplemented!();
     }
 }
 
@@ -129,7 +136,7 @@ mod test {
     #[test]
     fn test_plus_return_sum() {
         let five = Money::dollar(5);
-        let sum: Sum = five.plus(&five);
+        let sum = five.plus(&five);
         assert_eq!(&five, sum.augend);
         assert_eq!(&five, sum.addend);
     }
@@ -163,5 +170,15 @@ mod test {
     fn test_identity_rate() {
         let bank = Bank::new();
         assert_eq!(1, bank.rate("USD", "USD"));
+    }
+
+    #[test]
+    fn test_mixed_addition() {
+        let five_bucks = Money::dollar(5);
+        let ten_francs = Money::franc(10);
+        let bank = &mut Bank::new();
+        bank.add_rate("CHF", "USD", 2);
+        let result = bank.reduce(&five_bucks.plus(&ten_francs), "USD");
+        assert_eq!(Money::dollar(10), result);
     }
 }
