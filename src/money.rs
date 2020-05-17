@@ -193,4 +193,16 @@ mod test {
         let result = bank.reduce(&sum, "USD");
         assert_eq!(Money::dollar(15), result);
     }
+
+    #[test]
+    fn test_sum_times() {
+        let five_bucks = Money::dollar(5);
+        let ten_francs = Money::franc(10);
+        let bank = &mut Bank::new();
+        bank.add_rate("CHF", "USD", 2);
+        let sum = Sum::new(&five_bucks, &ten_francs);
+        let sum = sum.times(2);
+        let result = bank.reduce(&sum, "USD");
+        assert_eq!(Money::dollar(20), result);
+    }
 }
