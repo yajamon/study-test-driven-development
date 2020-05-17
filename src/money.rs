@@ -23,7 +23,7 @@ impl Money {
     pub fn times(&self, multiplier: i64) -> Self {
         Money::new(self.amount * multiplier, self.currency.to_string())
     }
-    pub fn plus<'a>(&'a self, addend: &'a Money) -> Sum<Money, Money> {
+    pub fn plus<'a, T: Expression>(&'a self, addend: &'a T) -> Sum<Self, T> {
         Sum::new(self, addend)
     }
     pub fn currency(&self) -> &str {
