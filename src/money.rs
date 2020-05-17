@@ -84,7 +84,7 @@ impl<'a, T: Expression, U: Expression> Expression for Sum<'a, T, U> {
         Money::new(amount, to.to_string())
     }
     fn plus<'b, Addend: Expression>(&'b self, addend: &'b Addend) -> Sum<'b, Self, Addend> {
-        unimplemented!();
+        Sum::new(self, addend)
     }
 }
 
