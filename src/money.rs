@@ -72,19 +72,19 @@ pub struct Sum<'a, T: Expression, U: Expression> {
     augend: &'a T,
     addend: &'a U,
 }
-impl<'a, T: Expression, U: Expression> Sum<'a, T, U> {
-    pub fn new(augend: &'a T, addend: &'a U) -> Sum<'a, T, U> {
+impl<'out, T: Expression, U: Expression> Sum<'out, T, U> {
+    pub fn new<'a>(augend: &'a T, addend: &'a U) -> Sum<'a, T, U> {
         Sum { augend, addend }
     }
 }
-impl<'a, T: Expression, U: Expression> Expression for Sum<'a, T, U> {
+impl<'out, T: Expression, U: Expression> Expression for Sum<'out, T, U> {
     type BaseType = Self;
     fn reduce(&self, bank: &Bank, to: &str) -> Money {
         let amount = self.augend.reduce(bank, to).amount + self.addend.reduce(bank, to).amount;
         Money::new(amount, to.to_string())
     }
-    fn plus<'b, Addend: Expression>(&'b self, addend: &'b Addend) -> Sum<'b, Self, Addend> {
-        unimplemented!();
+    fn plus<'a, Addend: Expression>(&'a self, addend: &'a Addend) -> Sum<'a, Self, Addend> {
+        Sum::new(self, addend)
     }
 }
 
@@ -180,5 +180,17 @@ mod test {
         bank.add_rate("CHF", "USD", 2);
         let result = bank.reduce(&five_bucks.plus(&ten_francs), "USD");
         assert_eq!(Money::dollar(10), result);
+    }
+
+    #[test]
+    fn test_sum_plus_money() {
+        let five_bucks = Money::dollar(5);
+        let ten_francs = Money::franc(10);
+        let bank = &mut Bank::new();
+        bank.add_rate("CHF", "USD", 2);
+        let sum = Sum::new(&five_bucks, &ten_francs);
+        let sum = sum.plus(&five_bucks);
+        let result = bank.reduce(&sum, "USD");
+        assert_eq!(Money::dollar(15), result);
     }
 }
